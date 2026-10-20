@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>맞춤 수학 문제집 추천</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,"Malgun Gothic",sans-serif;background:#f3f7ff;color:#1e293b}
+header{background:#fff;padding:18px 7%;border-bottom:1px solid #dbeafe}
+.logo{font-size:20px;font-weight:bold;color:#2563eb}
+main{max-width:1000px;margin:35px auto;padding:0 18px}
+.page{display:none}.page.active{display:block}
+.panel{background:white;border:1px solid #dbeafe;border-radius:22px;padding:28px;margin-bottom:20px;box-shadow:0 8px 25px #1e40af0a}
+.hero{text-align:center;padding:65px 20px}
+.hero-icon{font-size:55px}
+h1{font-size:32px;color:#172554;line-height:1.4}
+h2{color:#172554}
+p{line-height:1.7}
+.muted{color:#64748b}
+button{background:#2563eb;color:white;border:0;border-radius:11px;padding:14px 20px;font-size:15px;font-weight:bold;cursor:pointer}
+button:hover{opacity:.9}
+.secondary{background:#e2e8f0;color:#334155}
+label{display:block;font-weight:bold;margin:20px 0 8px}
+select{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px;background:white}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.level{background:#eff6ff;border-radius:14px;padding:16px;margin:15px 0}
+.tag{display:inline-block;background:#dbeafe;color:#1d4ed8;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold}
+.book-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px}
+.book{background:#fff;border:1px solid #dbeafe;border-radius:16px;padding:15px;min-width:0}
+.cover{height:180px;border-radius:10px;background:linear-gradient(145deg,#dbeafe,#93c5fd);display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;margin-bottom:14px;color:#1e3a8a;font-size:22px;font-weight:800;overflow:hidden}
+.cover img{width:100%;height:100%;object-fit:contain}
+.book h3{color:#172554;margin:12px 0 8px}
+.category{font-size:13px;color:#2563eb;font-weight:bold}
+.empty{padding:20px;background:#f8fafc;border-radius:12px}
+footer{text-align:center;color:#64748b;font-size:12px;padding:25px}
+@media(max-width:600px){h1{font-size:26px}.panel{padding:20px}.hero{padding:45px 15px}}
+</style>
+</head>
+<body>
+<header><div class="logo">📘 맞춤 수학 문제집 추천</div></header>
+
+<main>
+<section id="home" class="page active">
+  <div class="panel hero">
+    <div class="hero-icon">📚</div>
+    <h1>나에게 맞는<br>수학 문제집 찾기</h1>
+    <p class="muted">학년과 모의고사 수학 등급을 바탕으로<br>나에게 맞는 학습 교재를 확인해 보세요.</p>
+    <div class="actions" style="justify-content:center">
+      <button onclick="showPage('select')">추천 시작하기 →</button>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>📌 추천 프로그램 안내</h2>
+    <p>학생의 학년과 모의고사 등급에 따라 4단계로 구분하고, 각 단계에 맞는 교재를 추천합니다.</p>
+    <p class="muted">1단계 기초 완성 · 2단계 유형 완성 · 3단계 심화 학습 · 4단계 최상위권</p>
+  </div>
+</section>
+
+<section id="select" class="page">
+  <div class="panel">
+    <h2>학생 정보 입력</h2>
+    <p class="muted">현재 학년과 최근 모의고사 수학 등급을 선택해 주세요.</p>
+    <label for="year">현재 학년</label>
+    <select id="year">
+      <option value="1">고등학교 1학년</option>
+      <option value="2">고등학교 2학년</option>
+      <option value="3">고등학교 3학년</option>
+    </select>
+    <label for="grade">모의고사 수학 등급</label>
+    <select id="grade">
+      <option value="1">1등급</option>
+      <option value="2">2등급</option>
+      <option value="3">3등급</option>
+      <option value="4">4등급</option>
+      <option value="5">5등급</option>
+      <option value="6">6등급</option>
+      <option value="7">7등급</option>
+      <option value="8">8등급</option>
+      <option value="9">9등급</option>
+    </select>
+    <div class="actions">
+      <button onclick="recommend()">추천 결과 보기</button>
+      <button class="secondary" onclick="showPage('home')">뒤로</button>
+    </div>
+  </div>
+</section>
+
+<section id="results" class="page">
+  <div class="panel">
+    <h2>맞춤 교재 추천 결과</h2>
+    <p id="studentInfo" class="muted"></p>
+    <div id="levelInfo" class="level"></div>
+    <p>아래 교재는 선택한 학년과 단계에 맞춰 정리한 추천 목록입니다.</p>
+    <div id="bookList" class="book-grid"></div>
+    <div class="actions">
+      <button onclick="showPage('select')">조건 다시 선택하기</button>
+      <button class="secondary" onclick="showPage('home')">처음으로</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>맞춤 수학 문제집 추천 프로그램 · 학습 참고용</footer>
+
+<script>
+// 아래 교재 데이터는 사용자가 선정한 목록을 반영함.
+// 실제 표지 사진을 추가하려면 각 교재에 cover: "images/파일명.jpg"를 지정하면 됨.
+
+const levels = {
+  1: {name:"기초 완성", range:"6~9등급",
+      description:"개념을 이해하고 기본 유형을 익히는 단계입니다."},
+  2: {name:"유형 완성", range:"4~5등급",
+      description:"대표 유형을 반복하고 문제 해결력을 기르는 단계입니다."},
+  3: {name:"심화 학습", range:"2~3등급",
+      description:"응용 문제와 고난도 유형에 도전하는 단계입니다."},
+  4: {name:"최상위권", range:"1등급",
+      description:"고난도 문제와 실전 문제 해결력을 높이는 단계입니다."}
+};
+
+
+function item(category, name, reason) {
+  return { category, name, reason, cover: "" };
+}
+
+const curriculum = {
+  1: {
+    1: [
+      item("개념 학습","개념원리","핵심 개념을 이해하고 기본 원리를 익힙니다."),
+      item("기본 유형","RPM","개념을 적용하는 기본 유형을 연습합니다."),
+      item("쉬운 유형","라이트쎈","부담이 적은 유형부터 단계적으로 연습합니다.")
+    ],
+    2: [
+      item("유형별 문제","쎈 B단계","대표 유형을 정리하고 유형별 해결 방법을 익힙니다."),
+      item("유형 반복","마플 시너지","다양한 유형을 반복해 문제 풀이 경험을 쌓습니다."),
+      item("학교별 내신","교과서·기출문제","학교 수업 내용과 출제 경향을 점검합니다."),
+      item("서술형","학교별 서술형 자료","풀이 과정을 논리적으로 작성하는 연습을 합니다.")
+    ],
+    3: [
+      item("고난도 유형","쎈 C단계","기본 유형보다 높은 난도의 문제에 도전합니다."),
+      item("심화 내신","일품","심화 내신 문제를 통해 응용력을 기릅니다."),
+      item("복합 유형","고쟁이","여러 개념을 함께 활용하는 문제를 연습합니다."),
+      item("학교별 고난도","기출·변형 문제","학교별 고난도 출제 유형을 확인합니다.")
+    ],
+    4: [
+      item("최상위 내신","블랙라벨","최상위권 내신 문제에 도전합니다."),
+      item("고난도 유형","고쟁이 심화 문제","복합적인 사고가 필요한 문제를 연습합니다."),
+      item("수능형 문제","교육청·평가원 기출","수능형 문제의 출제 방식과 풀이 전략을 익힙니다."),
+      item("사고력","경시·올림피아드 입문 교재","깊이 있는 수학적 사고력을 기릅니다.")
+    ]
+  },
+  2: {
+    1: [
+      item("개념 학습","개념원리","핵심 개념을 이해하고 기본 원리를 익힙니다."),
+      item("기본 유형","RPM","개념을 적용하는 기본 유형을 연습합니다."),
+      item("쉬운 유형","라이트쎈","부담이 적은 유형부터 단계적으로 연습합니다."),
+      item("개념 보완","교과서·개념 정리 자료","교과서의 정의와 핵심 개념을 다시 확인합니다.")
+    ],
+    2: [
+      item("유형별 문제","쎈 B단계","대표 유형을 정리하고 유형별 해결 방법을 익힙니다."),
+      item("유형 반복","마플 시너지","다양한 유형을 반복해 문제 풀이 경험을 쌓습니다."),
+      item("학교별 내신","교과서·기출문제","학교 수업 내용과 출제 경향을 점검합니다."),
+      item("서술형","학교별 서술형 자료","풀이 과정을 논리적으로 작성하는 연습을 합니다.")
+    ],
+    3: [
+      item("고난도 유형","쎈 C단계","기본 유형보다 높은 난도의 문제에 도전합니다."),
+      item("심화 내신","일품","심화 내신 문제를 통해 응용력을 기릅니다."),
+      item("복합 유형","고쟁이","여러 개념을 함께 활용하는 문제를 연습합니다."),
+      item("학교별 고난도","기출·변형 문제","학교별 고난도 출제 유형을 확인합니다.")
+    ],
+    4: [
+      item("최상위 내신","블랙라벨","최상위권 내신 문제에 도전합니다."),
+      item("고난도 응용","고쟁이 심화 문제","복합적인 사고가 필요한 문제를 연습합니다."),
+      item("수능 기출","자이스토리·마더텅","기출문제를 분석하고 문제 해결 전략을 익힙니다."),
+      item("수능 심화","과목별 N제","학습 과목에 맞는 심화 문제를 풀어봅니다.")
+    ]
+  },
+  3: {
+    1: [
+      item("개념 복습","개념원리","핵심 개념과 기본 원리를 다시 점검합니다."),
+      item("기본 유형","RPM","개념을 적용하는 기본 유형을 연습합니다."),
+      item("유형 복습","쎈","자주 출제되는 유형을 정리하고 복습합니다."),
+      item("수능 개념","EBS 수능특강","수능 출제 범위의 주요 개념을 학습합니다.")
+    ],
+    2: [
+      item("유형별 문제","쎈","다양한 유형을 풀며 풀이 방법을 익힙니다."),
+      item("기출문제","자이스토리","기출문제를 통해 출제 유형을 분석합니다."),
+      item("기출문제","마더텅","기출문제를 반복하며 약점을 점검합니다."),
+      item("내신 대비","교과서·학교 기출","학교 시험 범위와 출제 경향을 확인합니다.")
+    ],
+    3: [
+      item("심화 내신","일품·고쟁이","응용 및 심화 문제 해결력을 높입니다."),
+      item("수능 기출 심화","평가원 기출","평가원 문제의 조건과 풀이 전략을 분석합니다."),
+      item("수능 실전","EBS 수능완성","수능 실전 문제에 적용하는 연습을 합니다."),
+      item("고난도 문제","과목별 N제","취약한 단원과 고난도 유형을 집중적으로 연습합니다.")
+    ],
+    4: [
+      item("고난도 N제","과목별 심화 N제","고난도 문제를 통해 실전 응용력을 높입니다."),
+      item("실전 모의고사","평가원·교육청 기출","제한 시간 안에서 기출문제를 해결하는 연습을 합니다."),
+      item("실전 모의고사","EBS·시중 모의고사","실전 감각과 시간 관리 능력을 점검합니다."),
+      item("오답 분석","오답 노트·기출 분석","반복되는 실수를 분석하고 약점을 보완합니다.")
+    ]
+  }
+};
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function escapeHTML(text) {
+  return String(text).replace(/[&<>"']/g, ch => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  })[ch]);
+}
+
+function getStage(grade) {
+  if (grade >= 6) return 1;
+  if (grade >= 4) return 2;
+  if (grade >= 2) return 3;
+  return 4;
+}
+
+// 저장된 이미지 파일명에 맞춰 학년과 교재 이름으로 표지를 자동 연결합니다.
+function findCover(book, year, stage) {
+  const files = {
+    "1|개념원리": "개념원리 공통수학 1.jpg",
+    "1|RPM": "개념원리 공통수학 1 rpm.jpg",
+    "1|라이트쎈": "라이트 쎈 공통수학 1.jpg",
+    "1|쎈 B단계": "쎈 B 공통수학 2.jpg",
+    "1|마플 시너지": "마플 시너지 공통수학2.jpg",
+    "1|쎈 C단계": "쎈 공통수학1.jpg",
+    "1|일품": "일품 공통수학1.jpg",
+    "1|고쟁이": "고쟁이 공통수학1.jpg",
+    "1|고쟁이 심화 문제": "고쟁이 공통수학1.jpg",
+    "1|블랙라벨": "블랙라벨 공수2.jpg",
+    "1|교육청·평가원 기출": "고1 모의고사 수학.jpg",
+    "1|경시·올림피아드 입문 교재": "고1 올림피아드.jpg",
+    "2|개념원리": "대수 개념원리.jpg",
+    "2|RPM": "대수 개념원리 rpm.jpg",
+    "2|라이트쎈": "고2 대수 라이트쎈.jpg",
+    "2|쎈 B단계": "고2 대수 쎈.jpg",
+    "2|마플 시너지": "고2 미적분1 마플시너지.jpg",
+    "2|쎈 C단계": "고2 대수 쎈.jpg",
+    "2|일품": "고2 대수 일품.jpg",
+    "2|고쟁이": "고2 미적분 1 고쟁이.jpg",
+    "2|고쟁이 심화 문제": "고2 미적분 1 고쟁이.jpg",
+    "2|블랙라벨": "고2 대수 블랙라벨.jpg",
+    "2|자이스토리·마더텅": "고2 미적분1 자이스토리.jpg",
+    "2|과목별 N제": "고2 대수 n제.jpg",
+    "3|개념원리": "고3 확률과 통계 개념원리.jpg",
+    "3|RPM": "고3 확률과 통계 개념원리 rpm.jpg",
+    "3|쎈": "고3 확률과 통계 쎈.jpg",
+    "3|자이스토리": "고3 확률과 통계 자이스토리.jpg",
+    "3|마더텅": "고3 확률과 통계 마더텅.jpg",
+    "3|일품·고쟁이": "고2 대수 일품.jpg",
+    "3|평가원 기출": "고3 확률과 통계 평가원 기출.jpg",
+    "3|EBS 수능특강": "고3 확률과 통계 수능특강.jpg",
+    "3|EBS 수능완성": "고3 확률과 통계 수능완성.jpg",
+    "3|과목별 N제": "고3 확률과 통계 n제.jpg",
+    "3|과목별 심화 N제": "고3 확률과 통계 n제.jpg",
+    "3|평가원·교육청 기출": "고3 확률과 통계 평가원 교육청 기출.jpg",
+    "3|EBS·시중 모의고사": "고3 확률과 통계 모의고사.jpg"
+  };
+  const file = files[`${year}|${book.name}`];
+  return file ? "images/" + file : "";
+}
+
+function renderBook(book, year, stage) {
+  const coverPath = findCover(book, year, stage) || book.cover;
+  let cover;
+  if (coverPath) {
+    cover = `<div class="cover">
+      <img src="${escapeHTML(coverPath)}" alt="${escapeHTML(book.name)} 표지"
+      onerror="this.parentElement.textContent='${escapeHTML(book.name)}'">
+    </div>`;
+  } else {
+    cover = `<div class="cover">${escapeHTML(book.name)}</div>`;
+  }
+
+  return `<article class="book">
+    ${cover}
+    <div class="category">${escapeHTML(book.category)}</div>
+    <h3>${escapeHTML(book.name)}</h3>
+    <p>${escapeHTML(book.reason)}</p>
+  </article>`;
+}
+
+function recommend() {
+  const year = Number(document.getElementById("year").value);
+  const grade = Number(document.getElementById("grade").value);
+  const stage = getStage(grade);
+  const level = levels[stage];
+  const books = curriculum[year][stage];
+
+  document.getElementById("studentInfo").textContent =
+    `고등학교 ${year}학년 · 모의고사 수학 ${grade}등급`;
+
+  document.getElementById("levelInfo").innerHTML =
+    `<span class="tag">${stage}단계 · ${level.name}</span>
+     <p><strong>대상 등급:</strong> ${level.range}</p>
+     <p>${level.description}</p>`;
+
+  document.getElementById("bookList").innerHTML = books.map(book => renderBook(book, year, stage)).join("");
+  showPage("results");
+}
+</script>
+</body>
+</html>
